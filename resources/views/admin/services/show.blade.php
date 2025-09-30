@@ -25,15 +25,15 @@
                                 </tr>
                                 <tr>
                                     <td>Service Name</td>
-                                    <td>{{$service->name}}</td>
+                                    <td>{{$service->label}}</td>
                                 </tr>
                                 <tr>
                                     <td>Public Name</td>
-                                    <td>{{$service->public_name}}</td>
+                                    <td>{{$service->public_label}}</td>
                                 </tr>
                                 <tr>
                                     <td>Tracking Provider</td>
-                                    <td>{{$service->company_key}}</td>
+                                    <td>{{$service->company->name}}</td>
                                 </tr>
                             </tbody>
                         </table>

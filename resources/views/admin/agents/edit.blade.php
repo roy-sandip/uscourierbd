@@ -36,8 +36,8 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="">{{__('Phone')}}</label>
-                                <input type="text" name="phone" class="form-control @error('phone') is-invalid @enderror" value="{{old('phone', $agent->phone)}}" >
+                                <label for="">{{__('Contact no')}}</label>
+                                <input type="text" name="contact" class="form-control @error('contact') is-invalid @enderror" value="{{old('contact', $agent->contact)}}" >
                             </div>
 
                             <div class="form-group">
@@ -46,9 +46,11 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="">{{__('Address')}}</label>
-                                <textarea name="address" cols="30" rows="3" class="form-control @error('address') is-invalid @enderror">{{old('address', $agent->address)}}</textarea>
+                                <label for="">{{__('Is Active')}}</label>
+                                <input type="checkbox" name="is_active" class="form-control @error('is_active') is-invalid @enderror" @if(old('is_active', $agent->is_active)) checked @endif >
                             </div>
+
+                          
                             
                             <div class="form-group">
                                 <button class="btn btn-primary" type="submit">Update</button>

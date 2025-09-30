@@ -21,14 +21,20 @@
 
                             <div class="form-group required">
                                 <label for="">Service Name</label>
-                                <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{old('name', $service->name)}}" required>
+                                <input type="text" name="label" class="form-control @error('label') is-invalid @enderror" value="{{old('label', $service->label)}}" required>
                             </div>
+
+                            <div class="form-group required">
+                                <label for="">Public Name</label>
+                                <input type="text" name="public_label" class="form-control @error('public_label') is-invalid @enderror" value="{{old('public_label', $service->public_label)}}" required>
+                            </div>
+
                             <div class="form-group required">
                                 <label for="">Tracking Provider</label>
-                                <select name="company" id="" class="form-control select2" data-placeholder="Select Company" required>
+                                <select name="company" id="" class="form-control select2" data-placeholder="Select Company">
                                     <option value="" selected disabled></option>
                                     @foreach($companies as $item)
-                                      <option value="{{$item->key}}" @if($service->company_key == $item->key) selected @endif >{{$item->name}}</option>
+                                      <option value="{{$item->id}}" @if($service->company_id == $item->id) selected @endif >{{$item->name}}</option>
                                     @endforeach
                                 </select>
                             </div>

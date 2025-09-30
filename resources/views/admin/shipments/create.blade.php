@@ -32,10 +32,10 @@
                                         
                                         
                                         <td>
-                                            <select name="agent_id" id="" class="form-control form-control-sm select2 @error('agent_id') is-invalid @enderror" data-placeholder="Select Agent" required>
+                                            <select name="agent_id" id="" class="form-control form-control-sm select2 @error('agent_id') is-invalid @enderror" data-placeholder="Select Agent" data-live-search="true" required>
                                                 <option disabled selected></option>
                                                 @foreach($agents as $item)
-                                                <option value="{{$item->id}}" @if(old('agent_id', $shipment->agent_id) == $item->id) selected @endif >{{$item->name}}</option>
+                                                <option value="{{$item->id}}" @if(old('agent_id', $shipment->agent_id) == $item->id) selected @endif >{{$item->company.' - '.$item->name}}</option>
                                                 @endforeach
                                             </select>
                                         </td>
@@ -373,9 +373,11 @@ function calculateWeights() {
 
 // trigger calc on any change
 $(".dimensions, .weight").on("change keyup", calculateWeights);
-
-
-
     });
+</script>
+
+
+<script>
+    $('.bootstrap-select').selectpicker();
 </script>
 @endsection

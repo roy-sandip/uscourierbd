@@ -28,8 +28,10 @@
                                 <th>Name</th>
                                 <th>Company</th>
                                 <th>Phone</th>
-                                <th>Address</th>
-                                <th>Option</th>
+                                <th>Email</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Admin</th>
+                                <th class="text-right">Option</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -38,9 +40,11 @@
                                 <td>{{$item->id}}</td>
                                 <td>{{$item->name}}</td>
                                 <td>{{$item->company}}</td>
-                                <td>{{$item->phone}}</td>
-                                <td>{{$item->address}}</td>
-                                <td>
+                                <td>{{$item->contact}}</td>
+                                <td>{{$item->email}}</td>
+                                <td class="text-center">{!! $item->showActiveStatus() !!}</td>
+                                <td class="text-center">{!! $item->showAdminStatus() !!}</td>
+                                <td class="text-right">
                                     <a href="{{route('admin.agents.show', $item->id)}}" class="btn btn-primary btn-sm">Show</a>
                                 </td>
                             </tr>

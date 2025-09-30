@@ -23,6 +23,7 @@
                                         <td>ID</td>
                                         <td>{{$agent->id}}</td>
                                     </tr>
+                                    
                                     <tr>
                                         <td>Name</td>
                                         <td>{{$agent->name}}</td>
@@ -40,8 +41,16 @@
                                         <td>{{$agent->email}}</td>
                                     </tr>
                                     <tr>
-                                        <td>Address</td>
-                                        <td>{{$agent->address}}</td>
+                                        <td>Is Admin?</td>
+                                        <td>{!! $agent->showAdminStatus() !!}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Status</td>
+                                        <td>{!! $agent->showActiveStatus() !!}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Total Shipments</td>
+                                        <td>{{$agent->shipments_count}}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -58,15 +67,13 @@
                                         <tr>
                                             <th>Name</th>
                                             <th>Userid</th>
-                                            <th>Role</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach($agent->users as $item)
                                         <tr>
                                             <td>{{$item->name}}</td>
-                                            <td>{{$item->username}}</td>
-                                            <td>{{$item->role}}</td>
+                                            <td>{{$item->userid}}</td>
                                         </tr>
                                         @endforeach
                                     </tbody>

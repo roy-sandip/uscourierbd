@@ -18,17 +18,24 @@
                             @csrf
                             <div class="form-group required">
                                 <label for="">Service Name</label>
-                                <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{old('name')}}" required>
+                                <input type="text" name="label" class="form-control @error('label') is-invalid @enderror" value="{{old('label')}}" required>
                             </div>
+
+                            <div class="form-group required">
+                                <label for="">Public Name</label>
+                                <input type="text" name="public_label" class="form-control @error('public_label') is-invalid @enderror" value="{{old('public_label')}}" required>
+                            </div>
+
                             <div class="form-group required">
                                 <label for="">Tracking Provider</label>
-                                <select name="company" id="" class="form-control select2" data-placeholder="Select Company" required>
+                                <select name="company" id="" class="form-control select2" data-placeholder="Select Company">
                                     <option value="" selected disabled></option>
                                     @foreach($companies as $item)
                                       <option value="{{$item->key}}" @if(old('company') == $item->key) selected @endif >{{$item->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
+
                             <div class="form-group">
                                 <button class="btn btn-primary" type="submit">Submit</button>
                                 <button class="btn btn-default" type="reset">Clear</button>

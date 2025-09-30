@@ -332,17 +332,17 @@ return [
         ['header' => 'account_settings'],
         [
             'text' => 'Agents',
-            'url' => 'admin/settings',
+            'route' => 'admin.agents.index',
             'icon' => 'fas fa-fw fa-tree',
         ],
         [
             'text' => 'Services',
-            'url' => 'admin/settings',
+            'route' => 'admin.services.index',
             'icon' => 'fas fa-box',
         ],
         [
             'text' => 'Users',
-            'url' => 'admin/settings',
+            'route' => 'admin.users.index',
             'icon' => 'fas fa-users',
         ],
 
@@ -485,7 +485,7 @@ return [
         ],
 
         'bootstrap-select' => [
-                        'active' => true,
+                        'active' => false,
                         'files'  => [
                                 [
                                        'type' => 'css',

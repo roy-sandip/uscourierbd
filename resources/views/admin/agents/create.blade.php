@@ -30,20 +30,20 @@
                                 <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{old('name')}}" required>
                             </div>
 
-                            <!-- <div class="form-group">
+                          <div class="form-group">
                                 <label for="">{{__('Company')}}</label>
                                 <input type="text" name="company" class="form-control @error('company') is-invalid @enderror" value="{{old('company')}}" >
-                            </div> -->
+                            </div> 
 
                             <div class="form-group">
                                 <label for="">{{__('Phone')}}</label>
-                                <input type="text" name="phone" class="form-control @error('phone') is-invalid @enderror" value="{{old('phone')}}" >
+                                <input type="text" name="contact" class="form-control @error('contact') is-invalid @enderror" value="{{old('contact')}}" >
                             </div>
 
-                          <!--   <div class="form-group">
+                         <div class="form-group">
                                 <label for="">{{__('Email')}}</label>
                                 <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{old('email')}}" >
-                            </div> -->
+                            </div>
 
                           <!--   <div class="form-group">
                                 <label for="">{{__('Address')}}</label>

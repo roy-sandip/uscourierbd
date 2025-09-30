@@ -36,9 +36,9 @@
                             @foreach($services as $item)
                             <tr>
                                 <td>{{$item->id}}</td>
-                                <td>{{$item->name}}</td>
-                                <td>{{$item->public_name}}</td>
-                                <td>{{$item->company_key}}</td>
+                                <td>{{$item->label}}</td>
+                                <td>{{$item->public_label}}</td>
+                                <td>{{$item->company_id}}</td>
                                 <td>
                                     <a href="{{route('admin.services.show', $item->id)}}" class="btn btn-primary btn-sm">Show</a>
                                     <a href="{{route('admin.services.edit', $item->id)}}" class="btn btn-warning btn-sm">Edit</a>
