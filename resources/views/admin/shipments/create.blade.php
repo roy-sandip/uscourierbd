@@ -27,7 +27,7 @@
                                             <input type="text" name="reference" class="form-control form-control-sm @error('reference') is-invalid @enderror" value="{{old('reference')}}">
                                         </td>
                                         <td>
-                                            <input type="number" min="1" max="100" name="pieces" class="form-control form-control-sm @error('reference') is-invalid @enderror" value="{{old('pieces', 1)}}">
+                                            <input type="number" min="1" max="50" name="pieces" class="form-control form-control-sm @error('reference') is-invalid @enderror" value="{{old('pieces', 1)}}">
                                         </td>
                                         
                                         
@@ -49,7 +49,7 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <x-input-field class="gross_weight weight" style="max-width: 100px;" min="0" step="0.01" name="gross_weight" type="number" :value="$shipment->gross_weight" append="KG" /> 
+                                            <x-input-field class="gross_weight weight" style="max-width: 100px;" min="0" step="0.01" name="gross_weight" type="number" append="KG" required /> 
                                         </td>
                                     </tr>
                                 </tbody>
@@ -135,7 +135,7 @@
                                                             data-tokens="{{$item['code']}} @isset($item['alt']) $item['alt'] @endisset" 
                                                             value="{{$item['code']}}" 
                                                             data-content="<span class='badge badge-default'>{{$item['code']}}</span> {{$item['name']}}"
-                                                            @if(old('receiver.country') == $item['code']) selected @endif >
+                                                            @if(old('receiver.country', $shipment->receiver->country) == $item['code']) selected @endif >
                                                             
                                                         </option>
                                                         @endforeach
@@ -171,16 +171,16 @@
                                     <tbody>
                                         <tr>
                                             <td>    
-                                                <x-input-field class="dimensions length" min="0" step="0.01" name="dimensions.length" type="number" :value="$shipment->dimensions->length" placeholder="Length"  />
+                                                <x-input-field class="dimensions length" min="0" step="0.01" name="dimensions.length" type="number"  placeholder="Length"  />
                                             </td>
                                             <td>
-                                                <x-input-field  class="dimensions width" min="0.00" name="dimensions.width" type="number" :value="$shipment->dimensions->width" placeholder="Width" />
+                                                <x-input-field  class="dimensions width" min="0.00" name="dimensions.width" type="number"  placeholder="Width" />
                                             </td>
                                             <td>
-                                                <x-input-field  class="dimensions height" min="0.00" name="dimensions.height" type="number" :value="$shipment->dimensions->height" placeholder="Height" />
+                                                <x-input-field  class="dimensions height" min="0.00" name="dimensions.height" type="number"  placeholder="Height" />
                                             </td>
                                             <td>
-                                                 <x-input-field class="volumetric_wt weight" id="volumetric_wt" style="text-align: right;" min="0.00" name="volumetric_weight" type="number" :value="$shipment->volumetric_weight" placeholder="0.00" append="KG" disabled />
+                                                 <x-input-field class="volumetric_wt weight" id="volumetric_wt" style="text-align: right;" min="0.00" name="" type="number" placeholder="0.00" append="KG" disabled />
                                             </td>
                                         </tr>
                                     </tbody>
@@ -194,16 +194,17 @@
                             <b>Billing Information</b>
                             <hr>
                             
-                            <x-input-field class="billed_weight"  min="0" step="0.01" name="billed_weight" type="number" :value="$shipment->billed_weight" inline="true" row="true" label="Billed Weight" append="KG" />
+                            <x-input-field class="billed_weight"  min="0" step="0.01" name="billing.billed_weight" type="number" inline="true" row="true" label="Billed Weight" append="KG" />
                             
 
                              <div class="form-group row">
                                  <label for="" class="col-sm-2 col-md-4">Net Bill</label>
                                  <div class="input-group input-group-sm col-sm-10 col-md-8">
-                                    <input type="number" name="billing[net_bill]" max="999999" class="form-control form-control-sm @error('billing.bill') is-invalid @enderror netBill billing" value="{{old('billing.bill')}}">
+                                    <input type="number" name="billing[net_bill]" max="999999" class="form-control form-control-sm @error('billing.bill') is-invalid @enderror netBill billing" value="{{old('billing.net_bill')}}">
                                     <div class="input-group-append"><span class="input-group-text">Taka</span></div> 
                                  </div>
                              </div>
+
                              <div class="form-group row">
                                  <label for="" class="col-sm-2 col-md-4">Extra Charge</label>
                                  <div class="input-group input-group-sm col-sm-10 col-md-8">
@@ -215,7 +216,7 @@
                              <div class="form-group row">
                                   <label for="" class="col-sm-2 col-md-4">Total Bill</label>
                                  <div class="input-group input-group-sm col-sm-10 col-md-8">
-                                    <input type="number" max="999999" class="form-control form-control-sm totalBill" readonly>
+                                    <input type="number" max="999999" name="_total_bill" value="{{old('_total_bill')}}" class="form-control form-control-sm totalBill" readonly>
                                     <div class="input-group-append">
                                         <span class="input-group-text">
                                         Taka
@@ -276,10 +277,10 @@
                         </div>
 
                         <div class="col-md-3 offset-md-1">
-                             <x-input-field name="received_at" class="received_at" prepend="Date" :value="$shipment->received_at" placeholder="Date" append="icon:far fa-calendar" />
+                             <x-input-field name="received_at" class="received_at" prepend="Date" value="{{now()->format('d/m/Y')}}" placeholder="Date" append="icon:far fa-calendar" />
                         </div>
                         <div class="col-md-3 offset-md-1">
-                             <x-input-field name="est_delivery_date" class="est_delivery_date" prepend="Est. Delivery Date" :value="$shipment->est_delivery_date" placeholder="Date" value="{{now()->addDays(7)->format('dd/mm/yyyy')}}" append="icon:far fa-calendar" />
+                             <x-input-field name="est_delivery_date" class="est_delivery_date" prepend="Est. Delivery Date" :value="$shipment->est_delivery_date" placeholder="Date" value="{{now()->addDays(7)->format('d/m/Y')}}" append="icon:far fa-calendar" />
                         </div>
                     </div> 
 

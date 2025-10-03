@@ -329,6 +329,15 @@ return [
             'icon'  => false,
         ],
        
+       //=================================//
+        ['header' => 'Billings & Invoice'],
+        [
+            'text'  => 'Invoices',
+            'route' => 'admin.agent-invoices.index',
+            'icon'  => 'fas fa-file-alt'
+        ],
+
+        //==============================//
         ['header' => 'account_settings'],
         [
             'text' => 'Agents',
@@ -448,7 +457,7 @@ return [
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@8',
+                    'location' => 'https://cdn.jsdelivr.net/npm/sweetalert2@11',
                 ],
             ],
         ],
@@ -485,7 +494,7 @@ return [
         ],
 
         'bootstrap-select' => [
-                        'active' => false,
+                        'active' => true,
                         'files'  => [
                                 [
                                        'type' => 'css',
@@ -515,6 +524,17 @@ return [
                             ],
                         ]
 
+       ],
+
+       'custom_js' => [
+            'active' => false,
+            'files'  => [
+                    [
+                           'type' => 'js',
+                           'asset' => true,
+                           'location' => '/custom.js' 
+                    ]
+            ],
        ],
        
     ],

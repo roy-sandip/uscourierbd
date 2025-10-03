@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('shipments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('awb')->unique()->nullable();
+            //$table->unsignedBigInteger('awb')->unique()->nullable();
             $table->integer('sender_id');
             $table->integer('receiver_id');
             $table->integer('agent_id');

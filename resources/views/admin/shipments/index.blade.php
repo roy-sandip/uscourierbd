@@ -11,8 +11,8 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header pb-0">
-                    <form action="#" method="GET" class="row">
-
+                    <form action="{{route('admin.shipments.filter')}}" method="POST" class="row" id="shipmentsFilter">
+                        @csrf
                         <div class="form-group col">
                             <label for="">Total: {{$shipments->total()}}</label>
                         </div>
@@ -22,7 +22,11 @@
                                     <span class="input-group-prepend">
                                         <span class="input-group-text">Date Range</span>
                                     </span>
-                                    <input type="text" id="dateRangePicker" class="form-control-sm form-control" name="dateRange" />
+                                    <input type="text" id="dateRangePicker" class="form-control-sm form-control" name="date_range" />
+                                    <span class="input-group-append">
+                                            <button class="btn btn-sm btn-warning" onclick="$('#dateRangePicker').val('')" type="button">Clear</button>
+                                    </span>
+
                                     
                                 </div>
                             </div>
@@ -108,6 +112,11 @@
 
 @section('js')
 <script>
+    //submitForm("#shipmentsFilter");
+</script>
+
+
+<script>
     $(document).ready(function(){
         $('.select2').select2();
         // $('#datetimepicker1').datetimepicker({
@@ -139,10 +148,10 @@
         'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
     },
     "locale": {
-        "format": "MM/DD/YYYY",
-        "separator": " - ",
+        "format": "MM-DD-YYYY",
+        "separator": "to",
         "applyLabel": "Apply",
-        "cancelLabel": "Cancel",
+        "cancelLabel": "Clear",
         "fromLabel": "From",
         "toLabel": "To",
         "customRangeLabel": "Custom",
@@ -181,5 +190,11 @@
     // $("#rangeTo").val(end.format('YYYY-MM-DD'));
   console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
 });
+
+$("#dateRangePicker").on('cancel.daterangepicker', function(ev, picker) {
+  //do something, like clearing an input
+  $('#dateRangePicker').val('');
+});
+
 </script>
 @endsection

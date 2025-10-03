@@ -87,20 +87,20 @@
                                 <tbody>
                                     @can('admin')
                                     <tr>
-                                        <td>Invoice ID</td> <td>{{$shipment->agentBilling->invoice_id}}</td>
+                                        <td>Invoice ID</td> <td>{{$shipment->billing->invoice_id}}</td>
                                     </tr>
                                     @endcan
                                     <tr>
-                                        <td>Total Bill</td> <td>{{$shipment->agentBilling->getBill()}}</td>
+                                        <td>Total Bill</td> <td>{{$shipment->billing->getBill()}}</td>
                                     </tr>
                                     <tr>
-                                        <td>Paid Amount</td> <td>{{$shipment->agentBilling->getPaid()}}</td>
+                                        <td>Paid Amount</td> <td>{{$shipment->billing->getPaid()}}</td>
                                     </tr>
                                     <tr>
-                                        <td>Due Amount</td> <td>{{$shipment->agentBilling->getDue()}}</td>
+                                        <td>Due Amount</td> <td>{{$shipment->billing->getDue()}}</td>
                                     </tr>
                                     <tr>
-                                        <td>Remark</td> <td>{{$shipment->agentBilling->remark}}</td>
+                                        <td>Remark</td> <td>{{$shipment->billing->remark}}</td>
                                     </tr>
                                 </tbody>
                             </table>

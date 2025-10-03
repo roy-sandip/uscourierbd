@@ -9,9 +9,11 @@ use Illuminate\Http\Request;
 use App\Models\Agent;
 use App\Models\Service;
 use App\Http\Requests\ShipmentRequest;
-use App\Models\AgentBilling;
+use App\Models\Billing;
 use App\Models\Contact;
+use App\Models\ShipmentUpdate;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 
 class ShipmentController extends Controller
@@ -24,47 +26,54 @@ class ShipmentController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {
-        
-         $request->validate([
-            'start,' => ['nullable', 'date_format:Y-m-d', 'required_with:end'],
-            'end'   => ['nullable', 'date_format:Y-m-d', 'lte:start'],
-        ]);      
-
+    {   
+        $filters = [];
         $query = Shipment::query()
                             ->with('agent', 'shipper', 'receiver', 'service')
                             ->latest('awb');
-        if(auth()->user()->can('admin'))                            
-        {
-            $request->whenFilled('agent', function($input)use($query){
-                if($input == 'all')
-                {
-                    return;
-                }
-                $input = (int) $input;
-                $query->where('agent_id', $input);
-            });
 
+        
+         if ($request->filled('q')) {
+            try {
+                $filters = json_decode(Crypt::decryptString($request->q), true);
+            } catch (\Exception $e) {
+                return redirect()
+                            ->route('admin.shipments.index')
+                            ->with('error', 'Invalid filter data. Please try again.');
+            }
         }
 
-        $request->whenFilled('service', function($input)use($query){
-            if($input == 'all')
-            {
-                return;
-            }
-            $input = (int) $input;
-            $query->where('service_id', $input);
-        });
+        //date range filter
+        if (!empty($filters['date_range'])) {
+            [$start, $end] = array_map('trim', explode('to', $filters['date_range']));
+            
+            $startDate = Carbon::createFromFormat('m-d-Y', $start)->startOfDay();
+            $endDate   = Carbon::createFromFormat('m-d-Y', $end)->endOfDay();
 
-        $request->whenFilled('start', function($input)use($query){
-            $start = new Carbon($input);
-            $query->where('received_at', '>=' ,$start);
-        });
-        $request->whenFilled('end', function($input)use($query){
-            $end = new Carbon($input);
-            $query->where('received_at', '<=' ,$end);
-        });
-        $shipments = $query->paginate(5)->withQueryString();
+            $query->whereBetween('received_at', [$startDate, $endDate]);
+        }                          
+
+
+
+        //filter by agent
+        if(!empty($filters['agent']) && auth()->user()->can('admin'))
+        {
+            if($filters['agent'] != 'all'){
+                $query->where('agent_id', $filters['agent']);    
+            }
+            
+        }
+
+
+        //filter by service
+        if(!empty($filters['service']) && $filters['service'] != 'all')
+        {
+            $query->where('service_id', $filters['service']);
+        }
+
+
+
+        $shipments = $query->paginate(2)->withQueryString();
         $agents = auth()->user()->can('admin') ? Agent::all() : [];
         $services = Service::all();
 
@@ -72,14 +81,51 @@ class ShipmentController extends Controller
         return view('admin.shipments.index', compact(['shipments', 'agents', 'services']));
     }
 
+
+
+    /**
+     * Shipment Filtering
+     */
+
+    public function filterShipments(Request $request)
+    {
+        $validated = $request->validate([
+            'date_range' => ['nullable', function($attribute, $value, $fail){
+                // Split by separator
+                [$start, $end] = array_map('trim', explode('to', $value));
+                // Parse using Carbon
+                try {
+                    $startDate = \Carbon\Carbon::createFromFormat('m-d-Y', $start);
+                    $endDate   = \Carbon\Carbon::createFromFormat('m-d-Y', $end);
+                } catch (\Exception $e) {
+                    return $fail("The $attribute format is invalid.");
+                }
+
+                // Ensure order
+                if ($startDate->gt($endDate)) {
+                    return $fail("The start date must be before or equal to the end date.");
+                }
+            }],
+            'service' => ['nullable'],
+            'agent' => ['nullable'],
+        ]);
+        $encrypted = Crypt::encryptString(json_encode($validated));
+        
+
+        return redirect()->route('admin.shipments.index', ['q' => $encrypted]);
+    }
+
     /**
      * Show the form for creating a new resource.
      */
     public function create(Request $request)
     {
+        
         $agents = Agent::all();
         $services = Service::all();
-        $shipment = Shipment::with(['shipper', 'receiver'])->find($request->get('clone')) ?? new Shipment();
+        $shipment = (empty($request->get('clone'))) 
+                                                ? new Shipment() 
+                                                : Shipment::with(['shipper', 'receiver'])->find($request->get('clone'));
         $countries = config('countries');
         
         return view('admin.shipments.create')->with([
@@ -108,13 +154,22 @@ class ShipmentController extends Controller
 
             $shipment = (new Shipment())->fillFromRequest($request->validated());
             $shipment->sender_id = $shipper->id;
-            $shipment->receiver_id = $receiver->id;            
-            $shipment->save();
+            $shipment->receiver_id = $receiver->id;
+                  
+            $shipment->saveQuietly();
             $shipment->setAwB()->save();
-            
+
             //create billing
-            $billing = (new AgentBilling())->fillFromRequest($request->validated()['billing']);
-            $shipment->agentBilling()->save($billing);
+            $billing = (new Billing())->fillFromRequest($request->validated()['billing']);
+            $shipment->billing()->save($billing);
+            
+            //create tracking update
+            $shipment->addUpdate([
+                'location'  => 'DHAKA-BD',
+                'activity'  => 'Shipment booked',
+                'datetime'  => now()
+            ]);
+
             return $shipment;
         });
 
@@ -126,7 +181,8 @@ class ShipmentController extends Controller
      */
     public function show(Shipment $shipment)
     {
-
+        $shipment->load('billing');
+        
         return view('admin.shipments.show', compact('shipment'));
     }
 
@@ -138,14 +194,13 @@ class ShipmentController extends Controller
         $agents = Agent::all();
         $services = Service::all();
         $countries = config('countries');
-        $billing = $shipment->agentBilling;
+        $shipment->load('billing', 'agent', 'service');
         
         return view('admin.shipments.edit')->with([
             'agents'    => $agents,
             'services'  => $services,
             'shipment'  => $shipment,
-            'countries' => $countries,
-            'billing'   => $billing,
+            'countries' => $countries
         ]);
     }
 
@@ -154,7 +209,7 @@ class ShipmentController extends Controller
      */
     public function update(ShipmentRequest $request, Shipment $shipment)
     {
-        $shipment->load('shipper', 'receiver', 'agentBilling');
+        $shipment->load('shipper', 'receiver', 'billing');
         
        //start storing records
       $shipment =  DB::transaction(function()use($request, $shipment){
@@ -169,7 +224,7 @@ class ShipmentController extends Controller
             $shipment->save();
             
             //create billing
-            $billing = $shipment->agentBilling->fillFromRequest($request->validated()['billing']);
+            $billing = $shipment->billing->fillFromRequest($request->validated()['billing']);
             
             $billing->save();
             return $shipment;

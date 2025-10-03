@@ -28,10 +28,10 @@
 
                             <div class="form-group required">
                                 <label for="">Tracking Provider</label>
-                                <select name="company" id="" class="form-control select2" data-placeholder="Select Company">
+                                <select name="company_id" id="" class="form-control select2" data-placeholder="Select Company">
                                     <option value="" selected disabled></option>
                                     @foreach($companies as $item)
-                                      <option value="{{$item->key}}" @if(old('company') == $item->key) selected @endif >{{$item->name}}</option>
+                                      <option value="{{$item->id}}" @if(old('company_id') == $item->id) selected @endif >{{$item->name}}</option>
                                     @endforeach
                                 </select>
                             </div>

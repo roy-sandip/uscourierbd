@@ -19,6 +19,7 @@ return new class extends Migration
             $table->timestamp('datetime')->useCurrent();
             $table->boolean('is_public')->default(true);
             $table->timestamp('published_at')->useCurrent();
+            $table->integer('created_by')->nullable();
             $table->timestamps();
         });
     }

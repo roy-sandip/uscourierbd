@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\Enums\BillingStatus;
+use Carbon\Carbon;
 
 class ShipmentRequest extends FormRequest
 {
@@ -51,18 +52,18 @@ class ShipmentRequest extends FormRequest
 
             'description' => ['required', 'string', 'min:2', 'max:99999'],
             'gross_weight' => ['required', 'decimal:0,2,', 'min:0', 'max:999'],
-            'billed_weight' => ['required', 'decimal:0,2', 'min:0', 'max:999'],
             'dimensions'    => ['array'],
-            'dimensions.length' => ['integer', 'required_with:dimensions.width,dimensions.height'],
-            'dimensions.width' => ['integer', 'required_with:dimensions.length,dimensions.height'],
-            'dimensions.height' => ['integer', 'required_with:dimensions.length,dimensions.width'],
+            'dimensions.length' => ['integer', 'nullable', 'required_with:dimensions.width,dimensions.height'],
+            'dimensions.width' => ['integer', 'nullable', 'required_with:dimensions.length,dimensions.height'],
+            'dimensions.height' => ['integer', 'nullable', 'required_with:dimensions.length,dimensions.width'],
             
             
             'operator' => ['nullable', 'string', 'max:190'],
-            'received_at' => ['required', "date_format:d/m/Y"],
-            'est_delivery_date' => ['nullable', "date_format:d/m/Y"],
+            'received_at' => ['required', "date_format:d/m/Y",  'after_or_equal:' . now()->subYear()->toDateString(),'before_or_equal:' . now()->addYear()->toDateString()],
+            'est_delivery_date' => ['nullable', "date_format:d/m/Y",  'after_or_equal:' . now()->subYear()->toDateString(),'before_or_equal:' . now()->addYear()->toDateString()],
 
             'billing' => ['array'],
+            'billing.billed_weight' => ['required', 'gte:gross_weight', 'decimal:0,2', 'min:0', 'max:999'],
             'billing.net_bill' => ['nullable', 'numeric', 'max:999999'],
             'billing.extra_charge' => ['nullable', 'numeric', 'max:999999'],
             'billing.total_paid' => ['nullable', 'numeric', 'max:999999'],
@@ -97,7 +98,8 @@ class ShipmentRequest extends FormRequest
         'receiver.phone' => 'Receiver phone number',
         'receiver.email' => 'Receiver Email',
 
-        'billing.net_bill' => 'Net Bill',
+
+        'billing.billed_weight' => 'Billed Weight',
         'billing.extra_charge' => 'Extra Charge',
         'billing.paid' => 'Paid Amount',
         'billing.status' => 'Billing Status',
@@ -107,8 +109,25 @@ class ShipmentRequest extends FormRequest
         'dimensions.width' => 'Package Width',
         'dimensions.height' => 'Package height',
 
+        'received_at' => 'Received at',
+        'est_delivery_date' => 'Estimated Delivery Date',
+
     ];
   }
+
+
+  public function messages()
+  {
+    return [
+        '*.after_or_equal' => ':attribute is too old, use a more recent date',
+        '*.before_or_equal' => ':attribute is too future, use a more recent date',
+    ];
+  }
+
+
+
+
+
 
     
 }

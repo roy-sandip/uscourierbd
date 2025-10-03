@@ -2,16 +2,23 @@
 
 namespace App\Models;
 
+
 use App\Enums\BillingStatus;
+use App\Enums\Currency;
 use Illuminate\Database\Eloquent\Model;
 
-class AgentBilling extends Model
+class Billing extends Model
 {
-        protected $casts = [
-                            'status' => BillingStatus::class
+    protected $casts = [
+                          'status'      => BillingStatus::class,
+                          'currency'    => Currency::class
                         ];
 
-        protected $guarded = [];
+    protected $attributes = [
+            'status'    => BillingStatus::PENDING,
+            'currency'  => Currency::BDT,
+    ];                 
+    protected $guarded = [];
 
 
     public function getBill()                            
@@ -27,6 +34,13 @@ class AgentBilling extends Model
     public function getDue()
     {
         return $this->total_due;
+    }
+
+
+
+    public function invoice()
+    {
+        return $this->belongsTo(Invoice::class);
     }
 
 
@@ -53,6 +67,9 @@ class AgentBilling extends Model
                                                             : ($this->status ?: ($defaults['status'] ?? BillingStatus::PENDING)),
 
 
+            'billed_weight'      =>  array_key_exists('billed_weight', $data) 
+                                                            ? $data['billed_weight'] 
+                                                            : ($this->billed_weight ?: ($defaults['billed_weight'] ?? null)),
             'net_bill'      =>  array_key_exists('net_bill', $data) 
                                                             ? $data['net_bill'] 
                                                             : ($this->net_bill ?: ($defaults['net_bill'] ?? 0)),
@@ -76,6 +93,4 @@ class AgentBilling extends Model
 
         return $this;
     }
-
-
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Company;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class CompanyController extends Controller
 {
@@ -12,7 +13,27 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        //
+        $companies = Company::paginate(25);
+        return view('admin.companies.index', compact('companies'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function sync()
+    {
+        $url = "https://api.binaryitlab.com/company.php";
+        $response = collect(Http::withoutVerifying()->get($url)->json());
+        $data = $response->map(fn($item) => [
+                                                'tracking_key'  => $item['key'],
+                                                'name'          => $item['name'],
+                                                'url'           => $item['url']
+                                            ])->toArray();
+
+        Company::upsert($data, ['tracking_key']);
+        return $response;
     }
 
     /**

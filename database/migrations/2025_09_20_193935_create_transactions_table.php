@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->string('transactionable_name');
-            $table->integer('transactionable_id');
+            $table->morphs('transactionable');
             $table->string('type');
             $table->decimal('amount', 10, 2);
             $table->timestamp('datetime')->useCurrent();

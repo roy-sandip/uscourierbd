@@ -27,7 +27,7 @@ class ServiceRequest extends FormRequest
         $rules =  [
             'label'         => ['required', 'string', 'min:2', 'max:128', Rule::unique('services', 'label')->ignore($serviceId)],
             'public_label'  => ['required', 'string', 'min:2', 'max:128'],
-            'company'       => ['nullable', 'integer', 'exists:App\Models\Company']
+            'company_id'       => ['nullable', 'integer', 'exists:App\Models\Company,id',]
         ];
 
         

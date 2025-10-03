@@ -87,7 +87,7 @@
         <meta name="msapplication-TileColor" content="#ffffff">
         <meta name="msapplication-TileImage" content="{{ asset('favicons/ms-icon-144x144.png') }}">
     @endif
-
+    
     <link rel="stylesheet" href="/style.css">
 </head>
 

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AgentBilling;
+use App\Models\Bill;
 use Illuminate\Http\Request;
 
-class AgentBillingController extends Controller
+class BillController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +34,7 @@ class AgentBillingController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(AgentBilling $agentBilling)
+    public function show(Bill $bill)
     {
         //
     }
@@ -42,7 +42,7 @@ class AgentBillingController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(AgentBilling $agentBilling)
+    public function edit(Bill $bill)
     {
         //
     }
@@ -50,7 +50,7 @@ class AgentBillingController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, AgentBilling $agentBilling)
+    public function update(Request $request, Bill $bill)
     {
         //
     }
@@ -58,7 +58,7 @@ class AgentBillingController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(AgentBilling $agentBilling)
+    public function destroy(Bill $bill)
     {
         //
     }

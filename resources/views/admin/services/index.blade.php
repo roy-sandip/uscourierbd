@@ -14,8 +14,12 @@
                     <div class="card-tools">
                         <ul class="nav nav-pills ml-auto">
                             <li class="nav-item">
-                            <a class="nav-link active" href="{{route('admin.services.create')}}">Create</a>
+                            <a class="btn btn-sm btn-info " href="{{route('admin.services.create')}}">New Service</a>
                             </li>
+                            <li class="nav-item">                                
+                                <a class="btn btn-sm " href="{{route('admin.companies.index')}}">Tracking Companies</a>
+                            </li>
+
                         </ul>
                     </div>
                 </div>
@@ -38,7 +42,7 @@
                                 <td>{{$item->id}}</td>
                                 <td>{{$item->label}}</td>
                                 <td>{{$item->public_label}}</td>
-                                <td>{{$item->company_id}}</td>
+                                <td>{{$item->company->name}}</td>
                                 <td>
                                     <a href="{{route('admin.services.show', $item->id)}}" class="btn btn-primary btn-sm">Show</a>
                                     <a href="{{route('admin.services.edit', $item->id)}}" class="btn btn-warning btn-sm">Edit</a>

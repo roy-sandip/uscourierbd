@@ -9,7 +9,7 @@ enum ContactType: string
     
 
 
-    public static function list(ContactType $exclude)
+    public static function list(ContactType $exclude): array
     {
         return [];
         return array_filter(self::cases(), fn($s) => $s !== $exclude);        

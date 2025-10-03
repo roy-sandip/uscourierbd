@@ -16,6 +16,10 @@
                         <button class="btn btn-tool" type="button" id="sync-service">
                             <i class="fas fa-sync"></i>
                         </button>
+
+                        <a class="btn btn-tool" href="{{route('admin.services.index')}}">
+                            <i class="fas fa-caret-left"></i> Services
+                        </a>
                         
                     </div>
                 </div>
@@ -35,7 +39,7 @@
                             <tr>
                                 <td>{{$item->id}}</td>
                                 <td>{{$item->name}}</td>
-                                <td>{{$item->key}}</td>
+                                <td>{{$item->tracking_key}}</td>
                                 <td>{{$item->url}}</td>
                             </tr>
                             @endforeach
@@ -60,12 +64,24 @@
                 dataType: 'json',
                 beforeSend: function(){
                     $("#sync-service i").addClass('fa-spin');
+                    $("#sync-service").attr('disabled', true);
                 },
                 complete: function(){
                     $("#sync-service i").removeClass('fa-spin');
+                    $("#sync-service").removeAttr('disabled');
                 },
                 success: function(response){
-                    toastr.success('Companies synced from Binary IT Lab server. Refresh to see changes.');
+                    // Swal.fire({
+                    //           title: 'Error!',
+                    //           text: 'Do you want to continue',
+                    //           icon: 'error',
+                    //           toast: true,
+                    //           confirmButtonText: 'Cool'
+                    //         })
+                    Toast.fire({
+                              icon: "success",
+                              title: "Tracking companies synced with Binary IT Lab"
+                            });
                 },
                 error: function(error){
                     toastr.error('Failed to sync. Contact your developer.');

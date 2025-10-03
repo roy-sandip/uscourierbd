@@ -16,7 +16,7 @@ class ServiceController extends Controller
      */
     public function index()
     {
-        $services = Service::paginate(25);
+        $services = Service::with('company')->paginate(25);
         return view('admin.services.index', compact('services'));
     }
 
@@ -28,7 +28,6 @@ class ServiceController extends Controller
     public function create()
     {
         $companies = Company::all();
-        
         return view('admin.services.create', compact('companies'));
     }
 
@@ -64,6 +63,7 @@ class ServiceController extends Controller
     public function edit(Service $service)
     {
         $companies = Company::all();
+
         return view('admin.services.edit', compact(['service', 'companies']));
     }
 

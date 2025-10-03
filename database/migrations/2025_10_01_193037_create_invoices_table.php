@@ -11,17 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('agent_invoices', function (Blueprint $table) {
+        Schema::create('invoices', function (Blueprint $table) {
             $table->id();
-            $table->integer('agent_id');
+            $table->nullableMorphs('invoiceable');
             $table->integer('parent_invoice_id')->nullable();
             $table->integer('child_invoice_id')->nullable();
             $table->timestamp('datetime')->useCurrent();
             $table->decimal('total_bill', 10, 2);
             $table->decimal('total_paid', 10, 2)->nullable();
             $table->decimal('total_due', 10, 2)->nullable();
-            $table->string('currency')->default('BDT');
+            $table->string('currency')->nullable();
+            $table->string('status')->nullable();
             $table->decimal('exchange_rate')->default(1);
+            $table->integer('created_by')->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('agent_invoices');
+        Schema::dropIfExists('invoices');
     }
 };

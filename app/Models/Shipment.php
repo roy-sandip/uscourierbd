@@ -8,7 +8,6 @@ use App\Models\Scopes\ShipmentPermissionScope;
 use App\Models\Contact;
 use App\Models\Agent;
 use App\Models\Service;
-use App\Models\AgentBilling;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 
@@ -17,6 +16,8 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 class Shipment extends Model
 {
     use HasFactory;
+    use \Znck\Eloquent\Traits\BelongsToThrough;
+
     const AWB_SERIAL = 5200000;
     
     protected $guarded = [];
@@ -25,6 +26,14 @@ class Shipment extends Model
         'est_delivery_date'     => 'datetime',
         'dimensions'            => 'array',
     ];
+    
+    protected static function booted()
+    {
+        static::creating(function ($shipment) {
+                        $shipment->created_by = auth()->user()->id;
+        });
+    }
+
 
 
     // Accessor for dimensions with defaults
@@ -81,11 +90,15 @@ class Shipment extends Model
         return $this->belongsTo(Contact::class, 'receiver_id')->withDefault();
     }
 
-    public function agentBilling()
+    public function billing()
     {
-        return $this->hasOne(AgentBilling::class);
+        return $this->hasOne(Billing::class)->withDefault();
     }
 
+    public function invoice()
+    {
+        return $this->belongsToThrough(Invoice::class, Billing::class);
+    }
  
 
     
@@ -107,7 +120,7 @@ class Shipment extends Model
             'reference'      => array_key_exists('reference', $data) ? $data['reference'] : ($this->reference ?? ($defaults['reference'] ?? null)),
             'pieces'         => array_key_exists('pieces', $data) ? $data['pieces'] : ($this->pieces ?? ($defaults['pieces'] ?? 1)),
             'gross_weight'     => array_key_exists('gross_weight', $data) ? $data['gross_weight'] : ($this->gross_weight ?? ($defaults['gross_weight'] ?? null)),
-            'billed_weight'  => array_key_exists('billed_weight', $data) ? $data['billed_weight'] : ($this->billed_weight ?? ($defaults['billed_weight'] ?? null)),
+            //'billed_weight'  => array_key_exists('billed_weight', $data) ? $data['billed_weight'] : ($this->billed_weight ?? ($defaults['billed_weight'] ?? null)),
             'description'    => array_key_exists('description', $data) ? $data['description'] : ($this->description ?? ($defaults['description'] ?? null)),
             'dimensions'     => array_key_exists('dimensions', $data) ? $data['dimensions'] : ($this->dimensions ?? ($defaults['dimensions'] ?? null)),
             'received_at'    => array_key_exists('received_at', $data)
@@ -122,9 +135,26 @@ class Shipment extends Model
             $dims = is_array($this->dimensions) ? $this->dimensions : (array)$this->dimensions;
             $this->volumetric_weight = round(array_product($dims) / 5000, 2);
         }
-
+            
         return $this;
     }
   
+
+    /**
+     * Shipment Updates
+     */
+    public function updates()
+    {
+        return $this->hasMany(ShipmentUpdate::class);
+    }
+
+    /**
+     * Create new update
+     */
+    public function addUpdate(array $update)
+    {
+        return $this->updates()->create($update);
+    }
+
     
 }

@@ -9,7 +9,7 @@ enum BillingStatus: string
     case INVOICED = 'invoiced';
 
 
-    public static function list(BillingStatus $exclude)
+    public static function list(BillingStatus $exclude): array
     {
         return [];
         return array_filter(self::cases(), fn($s) => $s !== $exclude);        

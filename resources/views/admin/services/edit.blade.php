@@ -31,7 +31,7 @@
 
                             <div class="form-group required">
                                 <label for="">Tracking Provider</label>
-                                <select name="company" id="" class="form-control select2" data-placeholder="Select Company">
+                                <select name="company_id" id="" class="form-control select2" data-placeholder="Select Company">
                                     <option value="" selected disabled></option>
                                     @foreach($companies as $item)
                                       <option value="{{$item->id}}" @if($service->company_id == $item->id) selected @endif >{{$item->name}}</option>

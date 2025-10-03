@@ -191,18 +191,18 @@
                         <div class="col-md-4 offset-md-1">
                             <b>Billing Information</b>
                             <hr>
-                            <x-input-field class="billed_weight"  min="0" step="0.01" name="billed_weight" type="number" :value="$shipment->billed_weight" inline="true" row="true" label="Billed Weight" append="KG" />
+                            <x-input-field class="billed_weight"  min="0" step="0.01" name="billing.billed_weight" type="number" :value="$shipment->billing->billed_weight" inline="true" row="true" label="Billed Weight" append="KG" />
                              <div class="form-group row">
                                  <label for="" class="col-sm-2 col-md-4">Net Bill</label>
                                  <div class="input-group input-group-sm col-sm-10 col-md-8">
-                                    <input type="number" name="billing[net_bill]" max="999999" class="form-control form-control-sm @error('billing.bill') is-invalid @enderror netBill billing" value="{{old('billing.bill', $billing->net_bill)}}">
+                                    <input type="number" name="billing[net_bill]" max="999999" class="form-control form-control-sm @error('billing.net_bill') is-invalid @enderror netBill billing" value="{{old('billing.net_bill', $shipment->billing->net_bill)}}">
                                     <div class="input-group-append"><span class="input-group-text">Taka</span></div> 
                                  </div>
                              </div>
                              <div class="form-group row">
                                  <label for="" class="col-sm-2 col-md-4">Extra Charge</label>
                                  <div class="input-group input-group-sm col-sm-10 col-md-8">
-                                    <input type="number" name="billing[extra_charge]" max="99999" class="form-control form-control-sm @error('billing.extra_charge') is-invalid @enderror extraCharge billing" value="{{old('billing.extra_charge',$billing->extra_charge)}}">
+                                    <input type="number" name="billing[extra_charge]" max="99999" class="form-control form-control-sm @error('billing.extra_charge') is-invalid @enderror extraCharge billing" value="{{old('billing.extra_charge',$shipment->billing->extra_charge)}}">
                                     <div class="input-group-append"><span class="input-group-text">Taka</span></div> 
                                  </div>
                              </div>
@@ -210,7 +210,7 @@
                              <div class="form-group row">
                                   <label for="" class="col-sm-2 col-md-4">Total Bill</label>
                                  <div class="input-group input-group-sm col-sm-10 col-md-8">
-                                    <input type="number" max="999999" value="{{$billing->getBill()}}" class="form-control form-control-sm totalBill" readonly>
+                                    <input type="number" max="999999" value="{{$shipment->billing->getBill()}}" class="form-control form-control-sm totalBill" readonly>
                                     <div class="input-group-append">
                                         <span class="input-group-text">
                                         Taka
@@ -222,7 +222,7 @@
                              <div class="form-group row">
                                  <label for="" class="col-sm-2 col-md-4">Paid</label>
                                  <div class="input-group input-group-sm col-sm-10 col-md-8">
-                                    <input type="number" name="billing[total_paid]" max="999999" class="form-control form-control-sm @error('billing.total_paid') is-invalid @enderror totalPaid billing" value="{{old('billing.total_paid', $billing->getPaid())}}">
+                                    <input type="number" name="billing[total_paid]" max="999999" class="form-control form-control-sm @error('billing.total_paid') is-invalid @enderror totalPaid billing" value="{{old('billing.total_paid', $shipment->billing->getPaid())}}">
                                     <div class="input-group-append"><span class="input-group-text">Taka</span></div> 
                                  </div>
                              </div>
@@ -236,7 +236,7 @@
                              <div class="form-group row">
                                  <label for="" class="col-sm-2 col-md-4">Due</label>
                                  <div class="input-group input-group-sm col-sm-10 col-md-8">
-                                    <input type="number" max="99999" value="{{$billing->getDue()}}" class="form-control form-control-sm totalDue" readonly>
+                                    <input type="number" max="99999" value="{{$shipment->billing->getDue()}}" class="form-control form-control-sm totalDue" readonly>
                                     <div class="input-group-append">
                                         <span class="input-group-text">
                                         Taka
@@ -252,7 +252,7 @@
                              <div class="form-group row">
                                  <label for="" class="col-sm-2 col-md-4">Comment</label>
                                  <div class="input-group input-group-sm col-sm-10 col-md-8">
-                                    <input type="text"  name="billing[remark]" max="190" class="form-control form-control-sm" value="{{old('billing.remark', $billing->remark)}}">
+                                    <input type="text"  name="billing[remark]" max="190" class="form-control form-control-sm" value="{{old('billing.remark', $shipment->billing->remark)}}">
                                  </div>
                              </div>
                         </div>
@@ -273,7 +273,7 @@
                              <x-input-field name="received_at" class="received_at" prepend="Date" :value="$shipment->received_at->format('d/m/Y')" placeholder="Date" append="icon:far fa-calendar" />
                         </div>
                         <div class="col-md-3 offset-md-1">
-                             <x-input-field name="est_delivery_date" class="est_delivery_date" prepend="Est. Delivery Date" :value="$shipment->est_delivery_date" placeholder="Date" value="{{now()->addDays(7)->format('dd/mm/yyyy')}}" append="icon:far fa-calendar" />
+                             <x-input-field name="est_delivery_date" class="est_delivery_date" prepend="Est. Delivery Date" :value="$shipment->est_delivery_date" placeholder="Date" value="{{now()->addDays(7)->format('d/m/Y')}}" append="icon:far fa-calendar" />
                         </div>
                     </div> 
 
